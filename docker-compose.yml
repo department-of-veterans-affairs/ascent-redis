@@ -1,0 +1,110 @@
+version: '3.3'
+
+services: 
+        
+  redis-master:
+    image: ascent/redis-sentinel:${RELEASE_VERSION:-latest}
+    environment:
+      - START_COMMAND=sh /redis/redis-wrapper.sh
+      - VAULT_ADDR=${VAULT_ADDR}
+      - VAULT_TOKEN=${REDIS_VAULT_TOKEN}
+    networks:
+      - ascentnet
+    logging:
+      driver: fluentd
+      options:
+        fluentd-async-connect: "true"
+        fluentd-max-retries: "10"
+        fluentd-retry-wait: "30s"
+    deploy:
+      placement:
+        constraints:
+        - node.role == worker
+      
+  redis-slave:
+    image: ascent/redis-sentinel:${RELEASE_VERSION:-latest}
+    environment:
+      - START_COMMAND=sh /redis/redis-wrapper.sh --slaveof redis-master 6379
+      - VAULT_ADDR=${VAULT_ADDR}
+      - VAULT_TOKEN=${REDIS_VAULT_TOKEN}
+    links:
+      - redis-master
+    networks:
+      - ascentnet
+    logging:
+      driver: fluentd
+      options:
+        fluentd-async-connect: "true"
+        fluentd-max-retries: "10"
+        fluentd-retry-wait: "30s"
+    deploy:
+      placement:
+        constraints:
+        - node.role == worker
+      
+  # Instance 1
+  redis-sentinel:
+    image: ascent/redis-sentinel:${RELEASE_VERSION:-latest}
+    environment:
+      - VAULT_ADDR=${VAULT_ADDR}
+      - VAULT_TOKEN=${REDIS_VAULT_TOKEN}
+    links:
+      - redis-master
+    networks:
+      - ascentnet
+    logging:
+      driver: fluentd
+      options:
+        fluentd-async-connect: "true"
+        fluentd-max-retries: "10"
+        fluentd-retry-wait: "30s"
+    deploy:
+      placement:
+        constraints:
+        - node.role == worker
+      
+  # Instance 2
+  redis-sentinel2:
+    image: ascent/redis-sentinel:${RELEASE_VERSION:-latest}
+    environment:
+      - VAULT_ADDR=${VAULT_ADDR}
+      - VAULT_TOKEN=${REDIS_VAULT_TOKEN}
+    links:
+      - redis-master
+    networks:
+      - ascentnet
+    logging:
+      driver: fluentd
+      options:
+        fluentd-async-connect: "true"
+        fluentd-max-retries: "10"
+        fluentd-retry-wait: "30s"
+    deploy:
+      placement:
+        constraints:
+        - node.role == worker
+  
+  # Instance 3
+  redis-sentinel3:
+    image: ascent/redis-sentinel:${RELEASE_VERSION:-latest}
+    environment:
+      - VAULT_ADDR=${VAULT_ADDR}
+      - VAULT_TOKEN=${REDIS_VAULT_TOKEN}
+    links:
+      - redis-master
+    networks:
+      - ascentnet
+    logging:
+      driver: fluentd
+      options:
+        fluentd-async-connect: "true"
+        fluentd-max-retries: "10"
+        fluentd-retry-wait: "30s"
+    deploy:
+      placement:
+        constraints:
+        - node.role == worker
+networks: 
+ ascentnet: 
+    driver: overlay
+
