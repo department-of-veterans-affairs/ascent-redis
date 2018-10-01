@@ -4,11 +4,8 @@ services:
   redis-master:
     build:
       context: .
-    environment:
-      - VAULT_ADDR=http://vault:8200
-      - VAULT_TOKEN=vaultroot
     ports:
-          - 6379:6379
+      - 6379
     logging:
       driver: json-file
     depends_on:
@@ -17,9 +14,6 @@ services:
   redis-slave:
     build:
       context: .
-    environment:
-      - VAULT_ADDR=http://vault:8200
-      - VAULT_TOKEN=vaultroot
     logging:
       driver: json-file
     depends_on:
@@ -28,9 +22,6 @@ services:
   redis-sentinel:
     build:
       context: .
-    environment:
-      - VAULT_ADDR=http://vault:8200
-      - VAULT_TOKEN=vaultroot
     logging:
       driver: json-file
     depends_on:
@@ -39,9 +30,6 @@ services:
   redis-sentinel2:
     build:
       context: .
-    environment:
-      - VAULT_ADDR=http://vault:8200
-      - VAULT_TOKEN=vaultroot
     logging:
       driver: json-file
     depends_on:
@@ -50,9 +38,6 @@ services:
   redis-sentinel3:
     build:
       context: .
-    environment:
-      - VAULT_ADDR=http://vault:8200
-      - VAULT_TOKEN=vaultroot
     logging:
       driver: json-file
     depends_on:
@@ -69,16 +54,11 @@ services:
       - tls_disable=1
       - GIT_ACCESS_TOKEN=$GIT_ACCESS_TOKEN
     ports:
-      - "8200:8200"
+      - 8200
     command: server -dev
-    healthcheck:
-        test: ["CMD", "curl", "-f", "http://localhost:8200/v1/sys/health"]
-        interval: 30s
-        timeout: 10s
-        retries: 5
     networks:
       - ascentnet
 
-networks: 
- ascentnet: 
-    driver: bridge
+networks:
+  ascentnet:
+    driver: ${DRIVER_TYPE:-bridge}

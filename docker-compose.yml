@@ -6,8 +6,8 @@ services:
     image: ascent/redis-sentinel:${RELEASE_VERSION:-latest}
     environment:
       - START_COMMAND=sh /redis/redis-wrapper.sh
-      - VAULT_ADDR=${VAULT_ADDR}
-      - VAULT_TOKEN=${REDIS_VAULT_TOKEN}
+      - VAULT_ADDR=${VAULT_ADDR:-http://vault:8200}
+      - VAULT_TOKEN=${VAULT_TOKEN:-vaultroot}
     networks:
       - ascentnet
     logging:
@@ -25,8 +25,8 @@ services:
     image: ascent/redis-sentinel:${RELEASE_VERSION:-latest}
     environment:
       - START_COMMAND=sh /redis/redis-wrapper.sh --slaveof redis-master 6379
-      - VAULT_ADDR=${VAULT_ADDR}
-      - VAULT_TOKEN=${REDIS_VAULT_TOKEN}
+      - VAULT_ADDR=${VAULT_ADDR:-http://vault:8200}
+      - VAULT_TOKEN=${VAULT_TOKEN:-vaultroot}
     links:
       - redis-master
     networks:
@@ -46,8 +46,8 @@ services:
   redis-sentinel:
     image: ascent/redis-sentinel:${RELEASE_VERSION:-latest}
     environment:
-      - VAULT_ADDR=${VAULT_ADDR}
-      - VAULT_TOKEN=${REDIS_VAULT_TOKEN}
+      - VAULT_ADDR=${VAULT_ADDR:-http://vault:8200}
+      - VAULT_TOKEN=${VAULT_TOKEN:-vaultroot}
     links:
       - redis-master
     networks:
@@ -67,8 +67,8 @@ services:
   redis-sentinel2:
     image: ascent/redis-sentinel:${RELEASE_VERSION:-latest}
     environment:
-      - VAULT_ADDR=${VAULT_ADDR}
-      - VAULT_TOKEN=${REDIS_VAULT_TOKEN}
+      - VAULT_ADDR=${VAULT_ADDR:-http://vault:8200}
+      - VAULT_TOKEN=${VAULT_TOKEN:-vaultroot}
     links:
       - redis-master
     networks:
@@ -88,8 +88,8 @@ services:
   redis-sentinel3:
     image: ascent/redis-sentinel:${RELEASE_VERSION:-latest}
     environment:
-      - VAULT_ADDR=${VAULT_ADDR}
-      - VAULT_TOKEN=${REDIS_VAULT_TOKEN}
+      - VAULT_ADDR=${VAULT_ADDR:-http://vault:8200}
+      - VAULT_TOKEN=${VAULT_TOKEN:-vaultroot}
     links:
       - redis-master
     networks:
@@ -104,7 +104,9 @@ services:
       placement:
         constraints:
         - node.role == worker
-networks: 
- ascentnet: 
-    driver: overlay
+        
+networks:
+  ascentnet:
+    external:
+      name: ascentnet
 
