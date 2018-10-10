@@ -71,14 +71,9 @@ services:
     ports:
       - "8200:8200"
     command: server -dev
-    healthcheck:
-        test: ["CMD", "curl", "-f", "http://localhost:8200/v1/sys/health"]
-        interval: 30s
-        timeout: 10s
-        retries: 5
     networks:
       - ascentnet
 
-networks: 
- ascentnet: 
+networks:
+ ascentnet:
     driver: bridge
