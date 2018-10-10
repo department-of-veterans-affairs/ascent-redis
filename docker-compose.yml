@@ -6,8 +6,8 @@ services:
     image: ascent/redis-sentinel:${RELEASE_VERSION:-latest}
     environment:
       - START_COMMAND=sh /redis/redis-wrapper.sh
-      - VAULT_ADDR=${VAULT_ADDR}
-      - VAULT_TOKEN=${REDIS_VAULT_TOKEN}
+      - VAULT_ADDR=${VAULT_ADDR:-http://vault:8200}
+      - VAULT_TOKEN=${VAULT_TOKEN:-vaultroot}
     networks:
       - ascentnet
     logging:
@@ -32,8 +32,8 @@ services:
     image: ascent/redis-sentinel:${RELEASE_VERSION:-latest}
     environment:
       - START_COMMAND=sh /redis/redis-wrapper.sh --slaveof redis-master 6379
-      - VAULT_ADDR=${VAULT_ADDR}
-      - VAULT_TOKEN=${REDIS_VAULT_TOKEN}
+      - VAULT_ADDR=${VAULT_ADDR:-http://vault:8200}
+      - VAULT_TOKEN=${VAULT_TOKEN:-vaultroot}
     links:
       - redis-master
     networks:
@@ -61,8 +61,8 @@ services:
   redis-sentinel:
     image: ascent/redis-sentinel:${RELEASE_VERSION:-latest}
     environment:
-      - VAULT_ADDR=${VAULT_ADDR}
-      - VAULT_TOKEN=${REDIS_VAULT_TOKEN}
+      - VAULT_ADDR=${VAULT_ADDR:-http://vault:8200}
+      - VAULT_TOKEN=${VAULT_TOKEN:-vaultroot}
     links:
       - redis-master
     networks:
@@ -90,8 +90,8 @@ services:
   redis-sentinel2:
     image: ascent/redis-sentinel:${RELEASE_VERSION:-latest}
     environment:
-      - VAULT_ADDR=${VAULT_ADDR}
-      - VAULT_TOKEN=${REDIS_VAULT_TOKEN}
+      - VAULT_ADDR=${VAULT_ADDR:-http://vault:8200}
+      - VAULT_TOKEN=${VAULT_TOKEN:-vaultroot}
     links:
       - redis-master
     networks:
@@ -118,8 +118,8 @@ services:
   redis-sentinel3:
     image: ascent/redis-sentinel:${RELEASE_VERSION:-latest}
     environment:
-      - VAULT_ADDR=${VAULT_ADDR}
-      - VAULT_TOKEN=${REDIS_VAULT_TOKEN}
+      - VAULT_ADDR=${VAULT_ADDR:-http://vault:8200}
+      - VAULT_TOKEN=${VAULT_TOKEN:-vaultroot}
     links:
       - redis-master
     networks:
@@ -141,7 +141,7 @@ services:
         monitor: 10s
     healthcheck:
       test: ["CMD", "/usr/local/bin/envconsul", "-config=/redis/template/envconsul-config.hcl", "-vault-addr=${VAULT_ADDR:-http://vault:8200}", "-vault-token=${VAULT_TOKEN:-vaultroot}", "/usr/local/bin/checkhealth.sh", "26379"]
-
 networks:
- ascentnet:
-    driver: overlay
+  ascentnet:
+    external:
+      name: ascentnet
