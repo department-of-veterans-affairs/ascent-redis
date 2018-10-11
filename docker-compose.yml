@@ -23,7 +23,7 @@ services:
       update_config:
         parallelism: 1
         delay: 10s
-        failure_action: rollback
+        failure_action: pause
         monitor: 10s
     healthcheck:
       test: ["CMD", "/usr/local/bin/envconsul", "-config=/redis/template/envconsul-config.hcl", "-vault-addr=${VAULT_ADDR:-http://vault:8200}", "-vault-token=${VAULT_TOKEN:-vaultroot}", "/usr/local/bin/checkhealth.sh", "6379"]
@@ -51,7 +51,7 @@ services:
       update_config:
         parallelism: 1
         delay: 10s
-        failure_action: rollback
+        failure_action: pause
         monitor: 10s
     healthcheck:
       test: ["CMD", "/usr/local/bin/envconsul", "-config=/redis/template/envconsul-config.hcl", "-vault-addr=${VAULT_ADDR:-http://vault:8200}", "-vault-token=${VAULT_TOKEN:-vaultroot}", "/usr/local/bin/checkhealth.sh", "6379"]
@@ -80,7 +80,7 @@ services:
       update_config:
         parallelism: 1
         delay: 10s
-        failure_action: rollback
+        failure_action: pause
         monitor: 10s
     healthcheck:
       test: ["CMD", "/usr/local/bin/envconsul", "-config=/redis/template/envconsul-config.hcl", "-vault-addr=${VAULT_ADDR:-http://vault:8200}", "-vault-token=${VAULT_TOKEN:-vaultroot}", "/usr/local/bin/checkhealth.sh", "26379"]
@@ -109,7 +109,7 @@ services:
       update_config:
         parallelism: 1
         delay: 10s
-        failure_action: rollback
+        failure_action: pause
         monitor: 10s
     healthcheck:
       test: ["CMD", "/usr/local/bin/envconsul", "-config=/redis/template/envconsul-config.hcl", "-vault-addr=${VAULT_ADDR:-http://vault:8200}", "-vault-token=${VAULT_TOKEN:-vaultroot}", "/usr/local/bin/checkhealth.sh", "26379"]
@@ -137,7 +137,7 @@ services:
       update_config:
         parallelism: 1
         delay: 10s
-        failure_action: rollback
+        failure_action: pause
         monitor: 10s
     healthcheck:
       test: ["CMD", "/usr/local/bin/envconsul", "-config=/redis/template/envconsul-config.hcl", "-vault-addr=${VAULT_ADDR:-http://vault:8200}", "-vault-token=${VAULT_TOKEN:-vaultroot}", "/usr/local/bin/checkhealth.sh", "26379"]
