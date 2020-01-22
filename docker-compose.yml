@@ -1,7 +1,7 @@
 version: '3.3'
 
-services: 
-        
+services:
+
   redis-master:
     image: ascent/redis-sentinel:${RELEASE_VERSION:-latest}
     environment:
@@ -20,7 +20,14 @@ services:
       placement:
         constraints:
         - node.role == worker
-      
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: pause
+        monitor: 10s
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/envconsul", "-config=/redis/template/envconsul-config.hcl", "-vault-addr=${VAULT_ADDR:-http://vault:8200}", "-vault-token=${VAULT_TOKEN:-vaultroot}", "/usr/local/bin/checkhealth.sh", "6379"]
+
   redis-slave:
     image: ascent/redis-sentinel:${RELEASE_VERSION:-latest}
     environment:
@@ -41,7 +48,15 @@ services:
       placement:
         constraints:
         - node.role == worker
-      
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: pause
+        monitor: 10s
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/envconsul", "-config=/redis/template/envconsul-config.hcl", "-vault-addr=${VAULT_ADDR:-http://vault:8200}", "-vault-token=${VAULT_TOKEN:-vaultroot}", "/usr/local/bin/checkhealth.sh", "6379"]
+
+
   # Instance 1
   redis-sentinel:
     image: ascent/redis-sentinel:${RELEASE_VERSION:-latest}
@@ -62,7 +77,15 @@ services:
       placement:
         constraints:
         - node.role == worker
-      
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: pause
+        monitor: 10s
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/envconsul", "-config=/redis/template/envconsul-config.hcl", "-vault-addr=${VAULT_ADDR:-http://vault:8200}", "-vault-token=${VAULT_TOKEN:-vaultroot}", "/usr/local/bin/checkhealth.sh", "26379"]
+
+
   # Instance 2
   redis-sentinel2:
     image: ascent/redis-sentinel:${RELEASE_VERSION:-latest}
@@ -83,7 +106,14 @@ services:
       placement:
         constraints:
         - node.role == worker
-  
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: pause
+        monitor: 10s
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/envconsul", "-config=/redis/template/envconsul-config.hcl", "-vault-addr=${VAULT_ADDR:-http://vault:8200}", "-vault-token=${VAULT_TOKEN:-vaultroot}", "/usr/local/bin/checkhealth.sh", "26379"]
+
   # Instance 3
   redis-sentinel3:
     image: ascent/redis-sentinel:${RELEASE_VERSION:-latest}
@@ -104,9 +134,14 @@ services:
       placement:
         constraints:
         - node.role == worker
-        
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: pause
+        monitor: 10s
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/envconsul", "-config=/redis/template/envconsul-config.hcl", "-vault-addr=${VAULT_ADDR:-http://vault:8200}", "-vault-token=${VAULT_TOKEN:-vaultroot}", "/usr/local/bin/checkhealth.sh", "26379"]
 networks:
   ascentnet:
     external:
       name: ascentnet
-
